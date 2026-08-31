@@ -10,7 +10,15 @@
 <body class="bg-slate-100 min-h-screen py-8 px-4 flex justify-center items-center font-sans text-slate-800">
 
   <div class="max-w-lg w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
-    <div class="bg-indigo-600 px-6 py-6 text-white text-center">
+    <!-- 頁頭標題 -->
+    <div class="bg-indigo-600 px-6 py-6 text-white text-center relative">
+      <!-- 右上角常駐雲端硬碟捷徑 -->
+      <a href="https://drive.google.com/drive/folders/1uux_IYtrQIZiVEs5tVzurZeMwsVpS0AO" target="_blank" 
+         class="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition backdrop-blur-sm">
+        <i class="fa-solid fa-folder-open"></i>
+        <span class="hidden sm:inline">瀏覽資料夾</span>
+      </a>
+
       <div class="inline-flex items-center justify-center w-14 h-14 bg-white/10 rounded-full mb-3">
         <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
       </div>
@@ -18,7 +26,9 @@
       <p class="text-indigo-100 text-xs mt-1">照片自動壓縮 ‧ 支援短影片 ‧ 支援手機多選與電腦資料夾</p>
     </div>
 
+    <!-- 表單內容 -->
     <div class="p-6 space-y-5">
+      <!-- 1. 活動名稱 -->
       <div>
         <label class="block text-sm font-semibold text-slate-700 mb-1">
           <i class="fa-solid fa-tag text-indigo-500 mr-1"></i> 活動名稱
@@ -27,6 +37,7 @@
                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition text-sm">
       </div>
 
+      <!-- 2. 活動日期 與 3. 教師姓名 -->
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block text-sm font-semibold text-slate-700 mb-1">
@@ -44,6 +55,7 @@
         </div>
       </div>
 
+      <!-- 檔案選取按鈕 (支援照片與影片) -->
       <div>
         <label class="block text-sm font-semibold text-slate-700 mb-2">
           <i class="fa-solid fa-photo-film text-indigo-500 mr-1"></i> 選取檔案或資料夾
@@ -69,11 +81,13 @@
         </div>
       </div>
 
+      <!-- 檔案清單摘要 -->
       <div id="fileSummary" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-600 flex justify-between items-center">
         <div>已選取：<strong id="totalCount" class="text-indigo-600 text-sm">0</strong> 個檔案</div>
         <div id="totalSize" class="text-slate-400 font-mono">0 MB</div>
       </div>
 
+      <!-- 上傳進度條 -->
       <div id="progressBox" class="hidden space-y-1.5 bg-indigo-50/60 p-4 rounded-xl border border-indigo-100">
         <div class="flex justify-between text-xs font-medium text-indigo-900">
           <span id="progressStatus">準備中...</span>
@@ -84,28 +98,35 @@
         </div>
       </div>
 
+      <!-- 開始上傳按鈕 -->
       <button type="button" id="uploadBtn" onclick="startUpload()" disabled
               class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
         開始上傳
       </button>
 
-      <div id="successAlert" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-center space-y-1">
-        <div class="text-2xl">🎉</div>
-        <div class="font-bold text-sm">所有檔案已全數成功上傳！</div>
-        <p class="text-xs text-emerald-600">已自動在 Google 雲端硬碟建立活動資料夾歸檔完成。</p>
+      <!-- 成功提示視窗 (含直接前往資料夾按鈕) -->
+      <div id="successAlert" class="hidden p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3 shadow-sm">
+        <div class="text-3xl">🎉</div>
+        <div>
+          <div class="font-bold text-base text-emerald-800">所有檔案已全數成功上傳！</div>
+          <p class="text-xs text-emerald-600 mt-0.5">已自動在 Google 雲端硬碟建立活動資料夾歸檔完成。</p>
+        </div>
+        
+        <a href="https://drive.google.com/drive/folders/1uux_IYtrQIZiVEs5tVzurZeMwsVpS0AO" target="_blank" 
+           class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition shadow-md shadow-emerald-200">
+          <i class="fa-solid fa-folder-open"></i>
+          <span>前往雲端硬碟瀏覽活動照片</span>
+        </a>
       </div>
     </div>
   </div>
 
   <script>
-    // 您的 Google Apps Script 發布網址
     const GAS_DEPLOY_URL = "https://script.google.com/macros/s/AKfycbw-j9mK47NHpU45AOLjBckNMH4xG6bjaTXx3szlT-SXF3r_czyU-7VfBFzH8qXGT5Ux/exec";
 
-    // 預設填入今日日期
     document.getElementById('date').value = new Date().toISOString().split('T')[0];
     let fileList = [];
 
-    // 處理檔案選取
     function handleFileSelect(files) {
       fileList = Array.from(files).filter(f => 
         f.type.startsWith('image/') || 
@@ -118,7 +139,6 @@
         return;
       }
 
-      // 檢查是否有大於 20MB 的檔案
       const oversizedFiles = fileList.filter(f => f.size > 20 * 1024 * 1024);
       if (oversizedFiles.length > 0) {
         const names = oversizedFiles.map(f => f.name).join('\n');
@@ -133,7 +153,6 @@
       document.getElementById('uploadBtn').disabled = false;
     }
 
-    // 圖片前端等比壓縮 (長邊最大 1920px, 畫質 0.85)
     function compressImage(file, maxWidth = 1920) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -164,7 +183,6 @@
       });
     }
 
-    // 將影片或非一般圖檔直接轉為 Base64
     function readFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -177,9 +195,7 @@
       });
     }
 
-    // 送出單一檔案 (自適應環境：支援 GitHub Pages 與 GAS 內部環境)
     async function sendFile(payload) {
-      // 1. 如果在 GAS 內部環境
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         return new Promise((resolve, reject) => {
           google.script.run
@@ -189,7 +205,6 @@
         });
       }
 
-      // 2. 如果在 GitHub Pages 外部環境 (採用 text/plain 與 no-cors 規避跨網域阻擋)
       await fetch(GAS_DEPLOY_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -202,7 +217,6 @@
       return { success: true };
     }
 
-    // 主上傳流程
     async function startUpload() {
       const activity = document.getElementById('activity').value.trim();
       const date = document.getElementById('date').value.trim();
@@ -226,7 +240,7 @@
 
       for (let i = 0; i < fileList.length; i++) {
         const file = fileList[i];
-        const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|gif|webp)$/i.test(f.name);
+        const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|gif|webp)$/i.test(file.name);
 
         try {
           let processedData;
@@ -265,7 +279,6 @@
         }
       }
 
-      // 上傳完成處理
       progressBox.classList.add('hidden');
       document.getElementById('fileSummary').classList.add('hidden');
       document.getElementById('successAlert').classList.remove('hidden');
