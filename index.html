@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-100 min-h-screen py-8 px-4 flex justify-center items-center text-slate-800 font-sans">
+<body class="bg-slate-100 min-h-screen py-8 px-4 flex justify-center items-center font-sans text-slate-800">
 
   <div class="max-w-lg w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
     <div class="bg-indigo-600 px-6 py-6 text-white text-center">
@@ -19,32 +19,34 @@
     </div>
 
     <div class="p-6 space-y-5">
-      
+      <!-- 1. 活動名稱 -->
       <div>
         <label class="block text-sm font-semibold text-slate-700 mb-1">
           <i class="fa-solid fa-tag text-indigo-500 mr-1"></i> 活動名稱
         </label>
         <input type="text" id="activity" required placeholder="例如：校外教學、創客體驗日" 
-               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm">
+               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition text-sm">
       </div>
 
+      <!-- 2. 活動日期 與 3. 教師姓名 -->
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block text-sm font-semibold text-slate-700 mb-1">
             <i class="fa-regular fa-calendar-days text-indigo-500 mr-1"></i> 活動日期
           </label>
           <input type="date" id="date" required 
-                 class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm">
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition text-sm">
         </div>
         <div>
           <label class="block text-sm font-semibold text-slate-700 mb-1">
             <i class="fa-solid fa-user-tie text-indigo-500 mr-1"></i> 教師姓名
           </label>
           <input type="text" id="teacher" required placeholder="例如：林老師" 
-                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm">
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition text-sm">
         </div>
       </div>
 
+      <!-- 檔案選擇區 -->
       <div>
         <label class="block text-sm font-semibold text-slate-700 mb-2">
           <i class="fa-solid fa-images text-indigo-500 mr-1"></i> 選取照片或資料夾
@@ -70,82 +72,75 @@
         </div>
       </div>
 
+      <!-- 狀態摘要 -->
       <div id="fileSummary" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-600 flex justify-between items-center">
-        <div>
-          <span>已選取：</span>
-          <strong id="totalCount" class="text-indigo-600 text-sm">0</strong> 張照片
-        </div>
+        <div>已選取：<strong id="totalCount" class="text-indigo-600 text-sm">0</strong> 張照片</div>
         <div id="totalSize" class="text-slate-400 font-mono">0 MB</div>
       </div>
 
+      <!-- 進度條 -->
       <div id="progressBox" class="hidden space-y-1.5 bg-indigo-50/60 p-4 rounded-xl border border-indigo-100">
         <div class="flex justify-between text-xs font-medium text-indigo-900">
-          <span id="progressStatus">正在準備上傳...</span>
+          <span id="progressStatus">上傳中...</span>
           <span id="progressPercent" class="font-bold">0%</span>
         </div>
         <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-          <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-150 ease-out"></div>
+          <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-150"></div>
         </div>
       </div>
 
       <button type="button" id="uploadBtn" onclick="startUpload()" disabled
-              class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed transition duration-200">
+              class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
         開始上傳
       </button>
 
-      <div id="successAlert" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-center space-y-2">
+      <div id="successAlert" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-center space-y-1">
         <div class="text-2xl">🎉</div>
         <div class="font-bold text-sm">照片已全數成功上傳！</div>
-        <p class="text-xs text-emerald-600">感謝老師的熱心分享，已自動歸檔完成。</p>
+        <p class="text-xs text-emerald-600">已自動歸檔完成，感謝您的分享。</p>
       </div>
-
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getStorage, ref, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // ==========================================
-    // ⚠️ 請將下方的物件內容替換為您的 Firebase Config
-    // ==========================================
+    // ⚠️ 專案 Config 設定
     const firebaseConfig = {
-      apiKey: "AIzaSyA5asajFgjG6bDgcyLODLVFkUF7oCuxwvc",
-  authDomain: "school-photo-upload.firebaseapp.com",
-  projectId: "school-photo-upload",
-  storageBucket: "school-photo-upload.firebasestorage.app",
-  messagingSenderId: "835712681576",
-  appId: "1:835712681576:web:3431ab3430fde31f585ddd"
+      apiKey: "AIzaSyD-abc123XYZ456...", // 貼上你的實際 apiKey
+      authDomain: "school-photo-upload.firebaseapp.com",
+      projectId: "school-photo-upload",
+      storageBucket: "school-photo-upload.firebasestorage.app",
+      messagingSenderId: "123456789012",
+      appId: "YOUR_APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const storage = getStorage(app);
 
-    // 預設日期為今天
-    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    // 進入網頁時自動在背景完成匿名驗證（避免被 GCS Preflight 擋下）
+    signInAnonymously(auth).catch((err) => console.log("Auth init:", err.message));
 
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
     let fileList = [];
 
-    // 接收檔案選擇
     window.handleFileSelect = function(files) {
-      // 僅篩選圖片檔案
-      fileList = Array.from(files).filter(f => f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp|heic|heif)$/i.test(f.name));
-      
+      fileList = Array.from(files).filter(f => f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp|heic|heif|jfif)$/i.test(f.name));
       if (fileList.length === 0) {
         alert('未偵測到任何圖片檔案，請重新選取！');
         return;
       }
-
       const totalSizeBytes = fileList.reduce((acc, f) => acc + f.size, 0);
       document.getElementById('totalCount').textContent = fileList.length;
       document.getElementById('totalSize').textContent = (totalSizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
-      
       document.getElementById('fileSummary').classList.remove('hidden');
       document.getElementById('successAlert').classList.add('hidden');
       document.getElementById('uploadBtn').disabled = false;
     };
 
-    // 開始上傳
     window.startUpload = async function() {
       const activity = document.getElementById('activity').value.trim();
       const date = document.getElementById('date').value.trim();
@@ -165,57 +160,37 @@
       btn.disabled = true;
       progressBox.classList.remove('hidden');
 
-      // 資料夾命名規則：活動日期_活動名稱_教師姓名
       const folderName = `${date}_${activity}_${teacher}`;
-      
-      let uploadedBytes = 0;
-      const totalBytes = fileList.reduce((acc, f) => acc + f.size, 0);
-      let finishedFiles = 0;
+      let completedCount = 0;
 
-      // 同步並行上傳（Firebase 速度極快）
-      const uploadTasks = fileList.map((file) => {
-        // 保留子目錄相對路徑或單純檔名
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
         const relativePath = file.webkitRelativePath ? file.webkitRelativePath : file.name;
         const fullStoragePath = `photos/${folderName}/${relativePath}`;
         const fileRef = ref(storage, fullStoragePath);
 
-        const task = uploadBytesResumable(fileRef, file);
+        progressStatus.textContent = `正在上傳第 ${i + 1}/${fileList.length} 張 (${file.name})...`;
 
-        return new Promise((resolve, reject) => {
-          let prevTransferred = 0;
-          task.on('state_changed',
-            (snapshot) => {
-              const delta = snapshot.bytesTransferred - prevTransferred;
-              prevTransferred = snapshot.bytesTransferred;
-              uploadedBytes += delta;
-
-              const percent = Math.min(100, Math.round((uploadedBytes / totalBytes) * 100));
-              progressBar.style.width = percent + '%';
-              progressPercent.textContent = percent + '%';
-              progressStatus.textContent = `上傳中 (${finishedFiles}/${fileList.length} 張)...`;
-            },
-            (err) => reject(err),
-            () => {
-              finishedFiles++;
-              progressStatus.textContent = `上傳中 (${finishedFiles}/${fileList.length} 張)...`;
-              resolve();
-            }
-          );
-        });
-      });
-
-      try {
-        await Promise.all(uploadTasks);
-        progressBox.classList.add('hidden');
-        document.getElementById('fileSummary').classList.add('hidden');
-        document.getElementById('successAlert').classList.remove('hidden');
-        btn.textContent = '完成上傳';
-        fileList = [];
-      } catch (error) {
-        alert('上傳過程中斷或發生錯誤：' + error.message);
-        btn.disabled = false;
-        progressBox.classList.add('hidden');
+        try {
+          // 使用直傳二進位 Blob (uploadBytes)，無 Preflight 阻擋問題
+          await uploadBytes(fileRef, file, { contentType: file.type || 'image/jpeg' });
+          completedCount++;
+          const percent = Math.round((completedCount / fileList.length) * 100);
+          progressBar.style.width = percent + '%';
+          progressPercent.textContent = percent + '%';
+        } catch (err) {
+          console.error("Upload error:", err);
+          alert(`檔案 ${file.name} 上傳失敗：` + err.message);
+          btn.disabled = false;
+          return;
+        }
       }
+
+      progressBox.classList.add('hidden');
+      document.getElementById('fileSummary').classList.add('hidden');
+      document.getElementById('successAlert').classList.remove('hidden');
+      btn.textContent = '完成上傳';
+      fileList = [];
     };
   </script>
 </body>
